@@ -1,11 +1,24 @@
 var Buffer = require('safe-buffer').Buffer
 
 module.exports = function xor (a, b) {
-  var length = Math.max(a.length, b.length)
-  var buffer = Buffer.allocUnsafe(length)
+  var min, max, buffer, i
 
-  for (var i = 0; i < length; ++i) {
-    buffer[i] = a[i] ^ b[i]
+  if (a.length >= b.length) {
+    max = a
+    min = b
+  } else {
+    max = b
+    min = a
+  }
+
+  buffer = Buffer.allocUnsafe(max.length)
+
+  for (i = 0; i < min.length; i++) {
+    buffer[i] = min[i] ^ max[i]
+  }
+
+  for (i = min.length; i < max.length; i++) {
+    buffer[i] = max[i]
   }
 
   return buffer
